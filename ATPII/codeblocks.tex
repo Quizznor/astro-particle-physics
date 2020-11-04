@@ -1,0 +1,22 @@
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+
+\definecolor{mywhite}{HTML}{ebebeb}
+\definecolor{mygrey}{HTML}{757575}
+\definecolor{mygreen}{HTML}{00ab28}
+\definecolor{mypurple}{HTML}{6b0ead}
+
+\lstset{%
+numbers=left,                      % where to draw (if at all) line numbers
+showspaces=false,                  % whitespaces in the code appear as _
+backgroundcolor=\color{mywhite},   % choose the background color
+basicstyle=\footnotesize,          % size of fonts used for the code
+breaklines=true,                   % automatic line breaking only at whitespace
+captionpos=b,                      % sets the caption-position to bottom
+commentstyle=\color{mygrey},       % comment style
+escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+keywordstyle=\color{purple},       % keyword style
+stringstyle=\color{mygreen},       % string literal style
+literate={°}{{$^\circ$}}1          % custom characters for file encoding
+}
