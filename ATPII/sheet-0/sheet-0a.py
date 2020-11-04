@@ -1,6 +1,5 @@
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-import numpy as np
 
 # Virgo has R.A 12h27m = 12.45h = 12.45h * 15°/h = 186.75°
 # Virgo has Dec 12° 43' = 12° + (43' * 1°/60' ) = 12.717°
