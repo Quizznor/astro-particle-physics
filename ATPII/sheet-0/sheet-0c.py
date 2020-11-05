@@ -1,49 +1,62 @@
 from astropy.coordinates import SkyCoord
 import matplotlib.pyplot as plt
 from astropy import units as u
+from varname import nameof
 import numpy as np
 
+def draw_object(object,frame,label):
+    if frame=="icrs":
+        phi, theta = -object.ra.wrap_at(180*u.degree), -object.dec
+    elif frame=="galactic":
+        phi, theta = -object.galactic.l.wrap_at(180*u.degree), object.galactic.b
+    elif frame=="supergalactic":
+        phi, theta = object.supergalactic.sgl.wrap_at(180*u.degree), object.supergalactic.sgb
+
+    if len(phi.flatten())==1:
+        plt.scatter(phi.radian,theta.radian,label=label,s=60)
+    else:
+        plt.scatter(phi.radian,theta.radian,label=label,s=10)
+
 # individual points
-spring_equinox_ICRS = SkyCoord('00h00m +00:00:00', unit=(u.hourangle, u.deg))
-virgo_cluster_ICRS = SkyCoord('12h27m +12:43', unit=(u.hourangle, u.deg))
-sagittarius_A_GAL = SkyCoord('00h00m +00:00:00', unit=(u.hourangle, u.deg),frame="galactic")
+spring_equinox = SkyCoord('00h00m +00:00:00', unit=(u.hourangle, u.deg))
+virgo_cluster = SkyCoord('12h27m +12:43', unit=(u.hourangle, u.deg))
+sagittarius_A = SkyCoord('00h00m +00:00:00', unit=(u.hourangle, u.deg),frame="galactic").icrs
+galactic_plane_l, galactic_plane_b = np.linspace(-np.pi,np.pi,100), np.zeros(100)
+galactic_plane = SkyCoord(galactic_plane_l, galactic_plane_b, unit=(u.radian, u.radian),frame="galactic").icrs
 
-#the galactic plane
-galactic_plane_ra, galactic_plane_dec = np.linspace(-np.pi,np.pi,100), np.zeros(100)
-galactic_plane_GAL = SkyCoord(galactic_plane_ra, galactic_plane_dec, unit=(u.deg, u.deg),frame="galactic")
-
-# galactic frame
-spring_equinox_GAL = spring_equinox_ICRS.galactic
-virgo_cluster_GAL = virgo_cluster_ICRS.galactic
+objects = [spring_equinox, sagittarius_A, virgo_cluster, galactic_plane]
+labels = ["Spring Equinox", "Sagittarius A*","Virgo Cluster","Galactic Plane"]
 
 
+# icrs frame
 plt.subplot(111, projection="aitoff")
-plt.title("galactic coordinates")
-plt.scatter(spring_equinox_GAL.l,spring_equinox_GAL.b,label="Spring Equinox")
-plt.scatter(virgo_cluster_GAL.l,virgo_cluster_GAL.b,label="Virgo Cluster")
-plt.scatter(sagittarius_A_GAL.l,sagittarius_A_GAL.b,label="Sagittarius A*")
-plt.plot(galactic_plane_GAL.l,galactic_plane_GAL.b,label="Galactic plane")
+plt.title("ICRS coordinate frame")
+for i in range(4):
+    draw_object(objects[i],"icrs",labels[i])
 
 plt.grid()
 plt.legend()
 
 
-# icrs frame
-sagittarius_A_ICRS = sagittarius_A_GAL.icrs
-galactic_plane_ICRS = galactic_plane_GAL.icrs
-
+# galactic frame
 plt.figure()
 plt.subplot(111, projection="aitoff")
-plt.title("equatorial coordinates")
-plt.scatter(spring_equinox_ICRS.ra,spring_equinox_ICRS.dec,label="Spring Equinox")
-plt.scatter(virgo_cluster_ICRS.ra,virgo_cluster_ICRS.dec,label="Virgo Cluster")
-plt.scatter(sagittarius_A_ICRS.ra,sagittarius_A_ICRS.dec,label="Sagittarius A*")
-plt.plot(galactic_plane_ICRS.ra,galactic_plane_ICRS.dec,label="ICRSactic plane")
+plt.title("galactic coordinate frame")
+for i in range(4):
+    draw_object(objects[i],"galactic",labels[i])
+
+plt.grid()
+plt.legend()
+
+
+# galactic frame
+plt.figure()
+plt.subplot(111, projection="aitoff")
+plt.title("supergalactic coordinate frame")
+for i in range(4):
+    draw_object(objects[i],"supergalactic",labels[i])
 
 plt.grid()
 plt.legend()
 
 plt.show()
-
-#print(spring_equinox_ICRS)
-#print(galactic_plane_GAL)
